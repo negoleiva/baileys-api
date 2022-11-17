@@ -104,17 +104,21 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
         }
     })
     */
-   //mark offline every 10s
-    setInterval(async () => {
-        await wa.sendPresenceUpdate("unavailable")
-      }, 10000)
+
 
     wa.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update
         const statusCode = lastDisconnect?.error?.output?.statusCode
+        var interv;
 
         if (connection === 'open') {
             retries.delete(sessionId)
+               //mark offline every 10s
+               if(interv)
+                    clearInterval(interv);
+            interv = setInterval(async () => {
+                                    await wa.sendPresenceUpdate("unavailable")
+                                }, 10000)
         }
 
         if (connection === 'close') {
