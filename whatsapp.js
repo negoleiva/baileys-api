@@ -104,6 +104,10 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
         }
     })
     */
+   //mark offline every 10s
+    setInterval(async () => {
+        await wa.sendPresenceUpdate("unavailable")
+      }, 10000)
 
     wa.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update
